@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4"><i class="fas fa-lightbulb"></i> {% trans "Safety Tips for Tzaneen Community" %}</h1>
+    
+    <div class="row">
+        {% for tip in safety_tips %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="{{ tip.icon }}"></i> 
+                        {% if preferred_language == 'ts' and tip.title_ts %}
+                            {{ tip.title_ts }}
+                        {% else %}
+                            {{ tip.title }}
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ tip.content }}</p>
+                    <hr>
+                    <h5>{% trans "Key Tips:" %}</h5>
+                    <ul class="list-unstyled">
+                        {% for item in tip.tips %}
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i> {{ item }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h4><i class="fas fa-phone-alt"></i> {% trans "Emergency Contacts" %}</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><strong>{% trans "Police Emergency:" %}</strong> 10111</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>{% trans "Crime Stop:" %}</strong> 08600 10111</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>{% trans "Ambulance:" %}</strong> 10177</p>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <p><strong>{% trans "Tzaneen Police:" %}</strong> 015 306 2111</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>{% trans "Nkowankowa Police:" %}</strong> 015 355 1000</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>{% trans "Gender-Based Violence Hotline:" %}</strong> 0800 150 150</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h4>{% trans "Share These Tips" %}</h4>
+                    <p>{% trans "Help keep our community safe by sharing these safety tips with family and neighbors." %}</p>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="window.print()">
+                            <i class="fas fa-print"></i> {% trans "Print Tips" %}
+                        </button>
+                        <button class="btn btn-success" onclick="shareTips()">
+                            <i class="fas fa-share-alt"></i> {% trans "Share" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function shareTips() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Safety Tips - MySAPS Tzaneen Connect',
+            text: 'Important safety tips for the Tzaneen community',
+            url: window.location.href
+        }).catch(console.error);
+    } else {
+        alert('Share not supported in this browser');
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}
