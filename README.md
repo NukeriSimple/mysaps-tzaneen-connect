@@ -34,5 +34,5 @@ A comprehensive crime reporting and case tracking system designed specifically f
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/mysaps-tzaneen-connect.git
+git clone https://github.com/NukeriSimple/mysaps-tzaneen-connect.git
 cd mysaps-tzaneen-connect
