@@ -3,12 +3,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.views.i18n import set_language
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('accounts/', include('accounts.urls')),
     path('cases/', include('cases.urls')),
+    path('i18n/', set_language, name='set_language'),
 ]
 
 if settings.DEBUG:

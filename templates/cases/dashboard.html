@@ -3,14 +3,14 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mb-4"><i class="fas fa-tachometer-alt"></i> {% trans "My Dashboard" %}</h1>
+    <h1 class="mb-4"><i class="fas fa-tachometer-alt"></i> {% trans "My Dashboard" %} / Xitlhangi xa Mina</h1>
     
     <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-md-3 mb-3">
             <div class="card bg-primary text-white">
                 <div class="card-body">
-                    <h5 class="card-title">{% trans "Total Cases" %}</h5>
+                    <h5 class="card-title">{% trans "Total Cases" %} / Tinhlengeletano</h5>
                     <h2 class="mb-0">{{ stats.total }}</h2>
                 </div>
             </div>
@@ -18,7 +18,7 @@
         <div class="col-md-3 mb-3">
             <div class="card bg-warning text-dark">
                 <div class="card-body">
-                    <h5 class="card-title">{% trans "Pending" %}</h5>
+                    <h5 class="card-title">{% trans "Pending" %} / Ku lindzela</h5>
                     <h2 class="mb-0">{{ stats.pending }}</h2>
                 </div>
             </div>
@@ -26,7 +26,7 @@
         <div class="col-md-3 mb-3">
             <div class="card bg-info text-white">
                 <div class="card-body">
-                    <h5 class="card-title">{% trans "In Progress" %}</h5>
+                    <h5 class="card-title">{% trans "In Progress" %} / Ku endliwa</h5>
                     <h2 class="mb-0">{{ stats.in_progress }}</h2>
                 </div>
             </div>
@@ -34,7 +34,7 @@
         <div class="col-md-3 mb-3">
             <div class="card bg-success text-white">
                 <div class="card-body">
-                    <h5 class="card-title">{% trans "Resolved" %}</h5>
+                    <h5 class="card-title">{% trans "Resolved" %} / Ku lulamisiwile</h5>
                     <h2 class="mb-0">{{ stats.resolved }}</h2>
                 </div>
             </div>
@@ -44,18 +44,18 @@
     <!-- Quick Actions -->
     <div class="row mb-4">
         <div class="col-md-12">
-            <div class="btn-group" role="group">
-                <a href="{% url 'cases:report_case' %}" class="btn btn-primary">
-                    <i class="fas fa-plus-circle"></i> {% trans "Report New Case" %}
+            <div class="btn-group flex-wrap" role="group">
+                <a href="{% url 'cases:report_case' %}" class="btn btn-primary m-1">
+                    <i class="fas fa-plus-circle"></i> {% trans "Report New Case" %} / Rhayela Mhaka
                 </a>
-                <a href="{% url 'cases:voice_report' %}" class="btn btn-success">
-                    <i class="fas fa-microphone"></i> {% trans "Voice Report" %}
+                <a href="{% url 'cases:voice_report' %}" class="btn btn-success m-1">
+                    <i class="fas fa-microphone"></i> {% trans "Voice Report" %} / Rhayela hi Rito
                 </a>
-                <a href="{% url 'cases:station_finder' %}" class="btn btn-info">
-                    <i class="fas fa-map-marker-alt"></i> {% trans "Find Police Station" %}
+                <a href="{% url 'cases:station_finder' %}" class="btn btn-info m-1">
+                    <i class="fas fa-map-marker-alt"></i> {% trans "Find Police Station" %} / Kuma Xitlhangi
                 </a>
-                <a href="{% url 'cases:safety_tips' %}" class="btn btn-warning">
-                    <i class="fas fa-lightbulb"></i> {% trans "Safety Tips" %}
+                <a href="{% url 'cases:safety_tips' %}" class="btn btn-warning m-1">
+                    <i class="fas fa-lightbulb"></i> {% trans "Safety Tips" %} / Switsundzuxo
                 </a>
             </div>
         </div>
@@ -67,17 +67,17 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-warning">
-                    <h5 class="mb-0"><i class="fas fa-bell"></i> {% trans "Recent Notifications" %}</h5>
+                    <h5 class="mb-0"><i class="fas fa-bell"></i> {% trans "Recent Notifications" %} / Switsundzuxo swa Karhi</h5>
                 </div>
                 <div class="card-body">
                     {% for notification in notifications %}
                     <div class="alert alert-info">
-                        <strong>{{ notification.title }}</strong><br>
-                        {{ notification.message }}<br>
-                        <small class="text-muted">{{ notification.created_at|timesince }} {% trans "ago" %}</small>
+                        <strong>{{ notification.get_title|default:notification.title }}</strong><br>
+                        {{ notification.get_message|default:notification.message }}<br>
+                        <small class="text-muted">{{ notification.created_at|timesince }} {% trans "ago" %} / ku hundza</small>
                     </div>
                     {% endfor %}
-                    <a href="{% url 'cases:notifications' %}" class="btn btn-link">{% trans "View all notifications" %}</a>
+                    <a href="{% url 'cases:notifications' %}" class="btn btn-link">{% trans "View all notifications" %} / Vonha hinkwaswo</a>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
     <!-- Cases List -->
     <div class="card">
         <div class="card-header">
-            <h5 class="mb-0"><i class="fas fa-folder-open"></i> {% trans "My Cases" %}</h5>
+            <h5 class="mb-0"><i class="fas fa-folder-open"></i> {% trans "My Cases" %} / Tinhlengeletano ta Mina</h5>
         </div>
         <div class="card-body">
             {% if cases %}
@@ -95,29 +95,29 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>{% trans "Case Number" %}</th>
-                            <th>{% trans "Title" %}</th>
-                            <th>{% trans "Category" %}</th>
-                            <th>{% trans "Status" %}</th>
-                            <th>{% trans "Date" %}</th>
-                            <th>{% trans "Actions" %}</th>
+                            <th>{% trans "Case Number" %} / Nomboro ya Mhaka</th>
+                            <th>{% trans "Title" %} / Xihoko</th>
+                            <th>{% trans "Category" %} / Xiyenge</th>
+                            <th>{% trans "Status" %} / Xiyimo</th>
+                            <th>{% trans "Date" %} / Siku</th>
+                            <th>{% trans "Actions" %} / Swilo swa ku endla</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for case in cases %}
                         <tr>
                             <td><strong>{{ case.case_number }}</strong></td>
-                            <td>{{ case.title|truncatechars:50 }}</td>
-                            <td>{{ case.category.get_name_display|default:"-" }}</td>
+                            <td>{{ case.get_title|default:case.title|truncatechars:50 }}</td>
+                            <td>{{ case.category.get_name_in_language|default:case.category.get_name_display }}</td>
                             <td>
                                 <span class="badge bg-{{ case.get_status_color }}">
-                                    {{ case.get_status_display_bilingual }}
+                                    {{ case.get_status_display_bilingual|default:case.get_status_display }}
                                 </span>
                             </td>
                             <td>{{ case.created_at|date:"Y-m-d" }}</td>
                             <td>
                                 <a href="{% url 'cases:case_detail' case.id %}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-eye"></i> {% trans "View" %}
+                                    <i class="fas fa-eye"></i> {% trans "View" %} / Vonha
                                 </a>
                             </td>
                         </tr>
@@ -132,7 +132,7 @@
                 <ul class="pagination justify-content-center">
                     {% if cases.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ cases.previous_page_number }}">{% trans "Previous" %}</a>
+                        <a class="page-link" href="?page={{ cases.previous_page_number }}">{% trans "Previous" %} / Ku ya emahlweni</a>
                     </li>
                     {% endif %}
                     
@@ -144,7 +144,7 @@
                     
                     {% if cases.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ cases.next_page_number }}">{% trans "Next" %}</a>
+                        <a class="page-link" href="?page={{ cases.next_page_number }}">{% trans "Next" %} / Ku ya emahlweni</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -154,8 +154,8 @@
             {% else %}
             <div class="text-center py-5">
                 <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
-                <p class="lead">{% trans "You have no cases yet." %}</p>
-                <a href="{% url 'cases:report_case' %}" class="btn btn-primary">{% trans "Report Your First Case" %}</a>
+                <p class="lead">{% trans "You have no cases yet." %} / U nga si va na tinhlengeletano.</p>
+                <a href="{% url 'cases:report_case' %}" class="btn btn-primary">{% trans "Report Your First Case" %} / Rhayela Mhaka yo Sungula</a>
             </div>
             {% endif %}
         </div>

@@ -7,26 +7,26 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-sign-in-alt"></i> {% trans "Login to MySAPS Tzaneen Connect" %}</h3>
+                    <h3><i class="fas fa-sign-in-alt"></i> {% trans "Login to MySAPS Tzaneen Connect" %} / Nghena eka MySAPS Tzaneen Connect</h3>
                 </div>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="username" class="form-label">{% trans "Username" %}</label>
+                            <label for="username" class="form-label">{% trans "Username" %} / Vito ro nghena</label>
                             <input type="text" name="username" class="form-control" required autofocus>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">{% trans "Password" %}</label>
+                            <label for="password" class="form-label">{% trans "Password" %} / Phasiwedi</label>
                             <input type="password" name="password" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-sign-in-alt"></i> {% trans "Login" %}
+                            <i class="fas fa-sign-in-alt"></i> {% trans "Login" %} / Nghena
                         </button>
                     </form>
                     <hr>
                     <p class="text-center">
-                        {% trans "Don't have an account?" %} <a href="{% url 'accounts:register' %}">{% trans "Register here" %}</a>
+                        {% trans "Don't have an account?" %} / A wu na akhawunti? <a href="{% url 'accounts:register' %}">{% trans "Register here" %} / Titsarisa laha</a>
                     </p>
                 </div>
             </div>

@@ -9,7 +9,8 @@
                 <i class="fas fa-shield-alt text-primary"></i> MySAPS Tzaneen Connect
             </h1>
             <p class="lead mb-4">
-                {% trans "Report crimes, track cases, and stay safe in the Tzaneen community" %}
+                {% trans "Report crimes, track cases, and stay safe in the Tzaneen community" %}<br>
+                Rhayela vugevenga, landzelela tinhlengeletano, u hlayiseka eka vaaki va Tzaneen
             </p>
             
             <div class="row mt-5 mb-5">
@@ -17,7 +18,7 @@
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
                             <i class="fas fa-phone-alt fa-3x text-primary mb-3"></i>
-                            <h5>{% trans "Emergency" %}</h5>
+                            <h5>{% trans "Emergency" %} / Xitulu</h5>
                             <p class="display-6">10111</p>
                         </div>
                     </div>
@@ -26,7 +27,7 @@
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
                             <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
-                            <h5>{% trans "Crime Stop" %}</h5>
+                            <h5>{% trans "Crime Stop" %} / Ku Yimisa Vugevenga</h5>
                             <p class="display-6">08600 10111</p>
                         </div>
                     </div>
@@ -35,7 +36,7 @@
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
                             <i class="fas fa-ambulance fa-3x text-primary mb-3"></i>
-                            <h5>{% trans "Ambulance" %}</h5>
+                            <h5>{% trans "Ambulance" %} / Ambilense</h5>
                             <p class="display-6">10177</p>
                         </div>
                     </div>
@@ -44,10 +45,10 @@
             
             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
                 <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg px-4">
-                    <i class="fas fa-user-plus"></i> {% trans "Get Started" %}
+                    <i class="fas fa-user-plus"></i> {% trans "Get Started" %} / Sungula
                 </a>
                 <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary btn-lg px-4">
-                    <i class="fas fa-sign-in-alt"></i> {% trans "Login" %}
+                    <i class="fas fa-sign-in-alt"></i> {% trans "Login" %} / Nghena
                 </a>
             </div>
             
@@ -55,15 +56,15 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <i class="fas fa-check-circle fa-2x text-success"></i>
-                        <p class="mt-2">{% trans "Easy Reporting" %}</p>
+                        <p class="mt-2">{% trans "Easy Reporting" %} / Ku Rhayela Ku Olova</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <i class="fas fa-chart-line fa-2x text-success"></i>
-                        <p class="mt-2">{% trans "Track Cases" %}</p>
+                        <p class="mt-2">{% trans "Track Cases" %} / Landzelela Tinhlengeletano</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <i class="fas fa-language fa-2x text-success"></i>
-                        <p class="mt-2">{% trans "Bilingual Support" %}</p>
+                        <p class="mt-2">{% trans "Bilingual Support" %} / Ku Seketeriwa hi Tindzimi Timbirhi</p>
                     </div>
                 </div>
             </div>

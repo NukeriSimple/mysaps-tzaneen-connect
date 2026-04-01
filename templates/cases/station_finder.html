@@ -3,29 +3,29 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mb-4"><i class="fas fa-map-marker-alt"></i> {% trans "Police Stations in Tzaneen Area" %}</h1>
+    <h1 class="mb-4"><i class="fas fa-map-marker-alt"></i> {% trans "Police Stations in Tzaneen Area" %} / Switlhangi swa Maphorisa eka ndhawu ya Tzaneen</h1>
     
     <div class="row">
         {% for station in stations %}
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">{{ station.name }}</h5>
+                    <h5 class="card-title">{{ station.get_name|default:station.name }}</h5>
                     <p class="card-text">
-                        <i class="fas fa-map-marker-alt"></i> {{ station.address }}<br>
+                        <i class="fas fa-map-marker-alt"></i> {{ station.get_address|default:station.address }}<br>
                         <i class="fas fa-phone"></i> {{ station.phone }}<br>
                         {% if station.emergency_phone %}
-                        <i class="fas fa-phone-alt"></i> {% trans "Emergency" %}: {{ station.emergency_phone }}<br>
+                        <i class="fas fa-phone-alt"></i> {% trans "Emergency" %} / Xitulu: {{ station.emergency_phone }}<br>
                         {% endif %}
-                        <i class="fas fa-clock"></i> {% trans "Hours" %}: {{ station.operating_hours }}
+                        <i class="fas fa-clock"></i> {% trans "Hours" %} / Tiawara: {{ station.get_hours|default:station.operating_hours }}
                         {% if station.distance %}
-                        <br><i class="fas fa-location-arrow"></i> {% trans "Distance" %}: {{ station.distance }} km
+                        <br><i class="fas fa-location-arrow"></i> {% trans "Distance" %} / Ku leha: {{ station.distance }} km
                         {% endif %}
                     </p>
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-sm btn-outline-primary" onclick="window.open('https://maps.google.com/?q={{ station.location_lat }},{{ station.location_lng }}')">
-                        <i class="fas fa-directions"></i> {% trans "Get Directions" %}
+                        <i class="fas fa-directions"></i> {% trans "Get Directions" %} / Kuma Ndlela
                     </button>
                 </div>
             </div>
@@ -33,7 +33,7 @@
         {% empty %}
         <div class="col-md-12">
             <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> {% trans "No police stations found." %}
+                <i class="fas fa-info-circle"></i> {% trans "No police stations found." %} / A ku na switlhangi leswi kumiweke.
             </div>
         </div>
         {% endfor %}
@@ -43,11 +43,11 @@
         <div class="col-md-12">
             <div class="card bg-light">
                 <div class="card-body text-center">
-                    <h5>{% trans "Emergency Contacts" %}</h5>
+                    <h5><i class="fas fa-phone-alt"></i> {% trans "Emergency Contacts" %} / Tinomoro ta Xitulu</h5>
                     <p>
-                        <strong>{% trans "Police Emergency" %}:</strong> 10111<br>
-                        <strong>{% trans "Crime Stop" %}:</strong> 08600 10111<br>
-                        <strong>{% trans "Ambulance" %}:</strong> 10177
+                        <strong>{% trans "Police Emergency" %} / Xitulu xa Maphorisa:</strong> 10111<br>
+                        <strong>{% trans "Crime Stop" %} / Ku Yimisa Vugevenga:</strong> 08600 10111<br>
+                        <strong>{% trans "Ambulance" %} / Ambilense:</strong> 10177
                     </p>
                 </div>
             </div>

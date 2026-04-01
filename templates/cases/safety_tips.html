@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mb-4"><i class="fas fa-lightbulb"></i> {% trans "Safety Tips for Tzaneen Community" %}</h1>
+    <h1 class="mb-4"><i class="fas fa-lightbulb"></i> {% trans "Safety Tips for Tzaneen Community" %} / Switsundzuxo swa Vusekurity eka Vaaki va Tzaneen</h1>
     
     <div class="row">
         {% for tip in safety_tips %}
@@ -11,20 +11,15 @@
             <div class="card h-100">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">
-                        <i class="{{ tip.icon }}"></i> 
-                        {% if preferred_language == 'ts' and tip.title_ts %}
-                            {{ tip.title_ts }}
-                        {% else %}
-                            {{ tip.title }}
-                        {% endif %}
+                        <i class="{{ tip.icon }}"></i> {{ tip.title_display }}
                     </h4>
                 </div>
                 <div class="card-body">
-                    <p class="lead">{{ tip.content }}</p>
+                    <p class="lead">{{ tip.content_display }}</p>
                     <hr>
-                    <h5>{% trans "Key Tips:" %}</h5>
+                    <h5><i class="fas fa-list-check"></i> {% trans "Key Tips" %} / Switsundzuxo swa Nkoka:</h5>
                     <ul class="list-unstyled">
-                        {% for item in tip.tips %}
+                        {% for item in tip.tips_display %}
                         <li class="mb-2">
                             <i class="fas fa-check-circle text-success me-2"></i> {{ item }}
                         </li>
@@ -40,27 +35,27 @@
         <div class="col-md-12">
             <div class="card bg-warning">
                 <div class="card-body">
-                    <h4><i class="fas fa-phone-alt"></i> {% trans "Emergency Contacts" %}</h4>
+                    <h4><i class="fas fa-phone-alt"></i> {% trans "Emergency Contacts" %} / Tinomoro ta Xitulu</h4>
                     <div class="row">
                         <div class="col-md-4">
-                            <p><strong>{% trans "Police Emergency:" %}</strong> 10111</p>
+                            <p><strong>{% trans "Police Emergency" %} / Xitulu xa Maphorisa:</strong> 10111</p>
                         </div>
                         <div class="col-md-4">
-                            <p><strong>{% trans "Crime Stop:" %}</strong> 08600 10111</p>
+                            <p><strong>{% trans "Crime Stop" %} / Ku Yimisa Vugevenga:</strong> 08600 10111</p>
                         </div>
                         <div class="col-md-4">
-                            <p><strong>{% trans "Ambulance:" %}</strong> 10177</p>
+                            <p><strong>{% trans "Ambulance" %} / Ambilense:</strong> 10177</p>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-4">
-                            <p><strong>{% trans "Tzaneen Police:" %}</strong> 015 306 2111</p>
+                            <p><strong>{% trans "Tzaneen Police" %} / Maphorisa ya Tzaneen:</strong> 015 306 2111</p>
                         </div>
                         <div class="col-md-4">
-                            <p><strong>{% trans "Nkowankowa Police:" %}</strong> 015 355 1000</p>
+                            <p><strong>{% trans "Nkowankowa Police" %} / Maphorisa ya Nkowankowa:</strong> 015 355 1000</p>
                         </div>
                         <div class="col-md-4">
-                            <p><strong>{% trans "Gender-Based Violence Hotline:" %}</strong> 0800 150 150</p>
+                            <p><strong>{% trans "Gender-Based Violence Hotline" %} / Muhala wa Nghungu ya Vusati:</strong> 0800 150 150</p>
                         </div>
                     </div>
                 </div>
@@ -72,14 +67,15 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body text-center">
-                    <h4>{% trans "Share These Tips" %}</h4>
-                    <p>{% trans "Help keep our community safe by sharing these safety tips with family and neighbors." %}</p>
+                    <h4><i class="fas fa-share-alt"></i> {% trans "Share These Tips" %} / Abelana hi Switsundzuxo leswi</h4>
+                    <p>{% trans "Help keep our community safe by sharing these safety tips with family and neighbors." %}<br>
+                    Pfuna ku hlayisa vaaki va hina hi ku abelana hi switsundzuxo leswi ni vandla lwa wena ni vaaki.</p>
                     <div class="btn-group">
                         <button class="btn btn-primary" onclick="window.print()">
-                            <i class="fas fa-print"></i> {% trans "Print Tips" %}
+                            <i class="fas fa-print"></i> {% trans "Print Tips" %} / Tirinta Switsundzuxo
                         </button>
                         <button class="btn btn-success" onclick="shareTips()">
-                            <i class="fas fa-share-alt"></i> {% trans "Share" %}
+                            <i class="fas fa-share-alt"></i> {% trans "Share" %} / Abelana
                         </button>
                     </div>
                 </div>
@@ -93,12 +89,12 @@
 function shareTips() {
     if (navigator.share) {
         navigator.share({
-            title: 'Safety Tips - MySAPS Tzaneen Connect',
-            text: 'Important safety tips for the Tzaneen community',
+            title: 'Safety Tips - MySAPS Tzaneen Connect / Switsundzuxo swa Vusekurity',
+            text: 'Important safety tips for the Tzaneen community / Switsundzuxo swa nkoka swa vusekurity eka vaaki va Tzaneen',
             url: window.location.href
         }).catch(console.error);
     } else {
-        alert('Share not supported in this browser');
+        alert('Share not supported in this browser / Ku abelana a ku seketeliwi eka browser leyi');
     }
 }
 </script>

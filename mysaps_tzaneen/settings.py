@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     
     # Third party apps
     'crispy_forms',
@@ -37,12 +38,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'mysaps_tzaneen.urls'
@@ -94,14 +95,18 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Africa/Johannesburg'
 USE_I18N = True
+USE_L10N = True
 USE_TZ = True
 
 # Languages
 LANGUAGES = [
     ('en', 'English'),
     ('ts', 'Xitsonga'),
-    ('nso', 'Sepedi'),
-    ('ve', 'TshiVenda'),
+]
+
+# Path for translation files
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
 ]
 
 # Static files

@@ -7,49 +7,49 @@
         <div class="col-md-12">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'cases:dashboard' %}">{% trans "Dashboard" %}</a></li>
-                    <li class="breadcrumb-item active">{% trans "Case Details" %}</li>
+                    <li class="breadcrumb-item"><a href="{% url 'cases:dashboard' %}">{% trans "Dashboard" %} / Xitlhangi</a></li>
+                    <li class="breadcrumb-item active">{% trans "Case Details" %} / Nhlokomhaka</li>
                 </ol>
             </nav>
             
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3>{% trans "Case" %}: {{ case.case_number }}</h3>
+                        <h3>{% trans "Case" %} / Mhaka: {{ case.case_number }}</h3>
                         <span class="badge bg-{{ case.get_status_color }} p-2">
-                            {{ case.get_status_display_bilingual }}
+                            {{ case.get_status_display_bilingual|default:case.get_status_display }}
                         </span>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <h4>{{ case.title }}</h4>
-                            <p><strong>{% trans "Description:" %}</strong></p>
-                            <p>{{ case.description }}</p>
+                            <h4>{{ case.get_title|default:case.title }}</h4>
+                            <p><strong>{% trans "Description" %} / Nhlamuselo:</strong></p>
+                            <p>{{ case.get_description|default:case.description }}</p>
                             
-                            <p><strong>{% trans "Location:" %}</strong></p>
-                            <p>{{ case.location_description }}</p>
+                            <p><strong>{% trans "Location" %} / Ndhawu:</strong></p>
+                            <p>{{ case.get_location|default:case.location_description }}</p>
                             
-                            <p><strong>{% trans "Reported on:" %}</strong> {{ case.created_at|date:"F j, Y, g:i a" }}</p>
-                            <p><strong>{% trans "Last updated:" %}</strong> {{ case.updated_at|date:"F j, Y, g:i a" }}</p>
+                            <p><strong>{% trans "Reported on" %} / Yi rhayiwe hi:</strong> {{ case.created_at|date:"F j, Y, g:i a" }}</p>
+                            <p><strong>{% trans "Last updated" %} / Ku hetelela ku lulamisiwa:</strong> {{ case.updated_at|date:"F j, Y, g:i a" }}</p>
                             
                             {% if case.assigned_officer %}
-                            <p><strong>{% trans "Assigned Officer:" %}</strong> {{ case.assigned_officer }}</p>
+                            <p><strong>{% trans "Assigned Officer" %} / Ofisara loyi a nyikiweke:</strong> {{ case.assigned_officer }}</p>
                             {% endif %}
                             
                             {% if case.assigned_station %}
-                            <p><strong>{% trans "Assigned Station:" %}</strong> {{ case.assigned_station }}</p>
+                            <p><strong>{% trans "Assigned Station" %} / Xitlhangi lexi nyikiweke:</strong> {{ case.assigned_station }}</p>
                             {% endif %}
                         </div>
                         <div class="col-md-4">
                             <div class="card bg-light">
                                 <div class="card-body">
-                                    <h5>{% trans "Contact Information" %}</h5>
-                                    <p><strong>{% trans "Name:" %}</strong> {{ case.contact_name }}</p>
-                                    <p><strong>{% trans "Phone:" %}</strong> {{ case.contact_phone }}</p>
+                                    <h5><i class="fas fa-address-card"></i> {% trans "Contact Information" %} / Ntivo wa ku tlangana</h5>
+                                    <p><strong>{% trans "Name" %} / Vito:</strong> {{ case.contact_name }}</p>
+                                    <p><strong>{% trans "Phone" %} / Xihambana:</strong> {{ case.contact_phone }}</p>
                                     {% if case.contact_email %}
-                                    <p><strong>{% trans "Email:" %}</strong> {{ case.contact_email }}</p>
+                                    <p><strong>{% trans "Email" %} / Imeyili:</strong> {{ case.contact_email }}</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
             {% if updates %}
             <div class="card">
                 <div class="card-header">
-                    <h4>{% trans "Case Timeline" %}</h4>
+                    <h4><i class="fas fa-timeline"></i> {% trans "Case Timeline" %} / Nkarhi wa Mhaka</h4>
                 </div>
                 <div class="card-body">
                     <div class="timeline">
@@ -69,9 +69,9 @@
                         <div class="mb-4">
                             <div class="border-start border-3 border-primary ps-3">
                                 <small class="text-muted">{{ update.created_at|date:"F j, Y, g:i a" }}</small>
-                                <p class="mt-2">{{ update.update_text }}</p>
+                                <p class="mt-2">{{ update.get_update_text|default:update.update_text }}</p>
                                 {% if update.created_by %}
-                                <small class="text-muted">{% trans "by" %} {{ update.created_by.get_full_name|default:update.created_by.username }}</small>
+                                <small class="text-muted">{% trans "by" %} / hi {{ update.created_by.get_full_name|default:update.created_by.username }}</small>
                                 {% endif %}
                             </div>
                         </div>
@@ -83,7 +83,7 @@
             
             <div class="mt-4">
                 <a href="{% url 'cases:dashboard' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> {% trans "Back to Dashboard" %}
+                    <i class="fas fa-arrow-left"></i> {% trans "Back to Dashboard" %} / Buyela eka Xitlhangi
                 </a>
             </div>
         </div>

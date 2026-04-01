@@ -5,7 +5,7 @@ from accounts.models import CustomUser
 import uuid
 
 class IncidentCategory(models.Model):
-    """Incident categories"""
+    """Incident categories with bilingual support"""
     
     CATEGORY_TYPES = [
         ('theft', 'Theft / Vutsotsi'),
@@ -19,6 +19,7 @@ class IncidentCategory(models.Model):
     ]
     
     name = models.CharField(max_length=50, choices=CATEGORY_TYPES, unique=True)
+    name_ts = models.CharField(max_length=100, blank=True, verbose_name="Name in Xitsonga")
     icon = models.CharField(max_length=50, default='fas fa-exclamation-triangle')
     is_active = models.BooleanField(default=True)
     
@@ -28,10 +29,16 @@ class IncidentCategory(models.Model):
     
     def __str__(self):
         return self.get_name_display()
+    
+    def get_name_in_language(self, language='en'):
+        """Get category name in specified language"""
+        if language == 'ts' and self.name_ts:
+            return self.name_ts
+        return self.get_name_display()
 
 
 class Case(models.Model):
-    """Case model for tracking incidents"""
+    """Case model with bilingual support"""
     
     STATUS_CHOICES = [
         ('pending', 'Pending / Ku lindzela'),
@@ -43,31 +50,32 @@ class Case(models.Model):
     
     # Case identification
     case_number = models.CharField(max_length=20, unique=True, editable=False)
-    reference_number = models.CharField(max_length=20, blank=True, null=True, help_text=_('SAPS case reference number'))
+    reference_number = models.CharField(max_length=20, blank=True, null=True)
     
     # Relationships
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='cases')
     category = models.ForeignKey(IncidentCategory, on_delete=models.SET_NULL, null=True, related_name='cases')
     
-    # Incident details
+    # Incident details - English
     title = models.CharField(max_length=200)
     description = models.TextField(validators=[MinLengthValidator(10)])
-    description_xitsonga = models.TextField(blank=True, null=True)
+    
+    # Incident details - Xitsonga
+    title_ts = models.CharField(max_length=200, blank=True, null=True, verbose_name="Title in Xitsonga")
+    description_ts = models.TextField(blank=True, null=True, verbose_name="Description in Xitsonga")
     
     # Location
     location_lat = models.DecimalField(max_digits=10, decimal_places=7, blank=True, null=True)
     location_lng = models.DecimalField(max_digits=10, decimal_places=7, blank=True, null=True)
-    location_description = models.TextField(help_text=_('Describe location using landmarks if GPS not available'))
+    location_description = models.TextField()
+    location_description_ts = models.TextField(blank=True, null=True, verbose_name="Location in Xitsonga")
     
     # Contact details
     contact_name = models.CharField(max_length=100)
     contact_phone = models.CharField(max_length=15)
     contact_email = models.EmailField(blank=True, null=True)
     
-    # Evidence
-    has_photo_evidence = models.BooleanField(default=False)
-    
-    # Status tracking
+    # Status
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     assigned_officer = models.CharField(max_length=100, blank=True, null=True)
     assigned_station = models.CharField(max_length=100, blank=True, null=True)
@@ -78,8 +86,6 @@ class Case(models.Model):
     resolved_at = models.DateTimeField(blank=True, null=True)
     
     class Meta:
-        verbose_name = _('Case')
-        verbose_name_plural = _('Cases')
         ordering = ['-created_at']
     
     def save(self, *args, **kwargs):
@@ -94,7 +100,6 @@ class Case(models.Model):
         return f"{self.case_number} - {self.title}"
     
     def get_status_color(self):
-        """Return CSS class for status indicator"""
         colors = {
             'pending': 'warning',
             'assigned': 'info',
@@ -104,24 +109,42 @@ class Case(models.Model):
         }
         return colors.get(self.status, 'secondary')
     
-    def get_status_display_bilingual(self):
-        """Return bilingual status display"""
+    def get_status_display_bilingual(self, language='en'):
+        """Get bilingual status display"""
         status_map = {
-            'pending': 'Pending / Ku lindzela',
-            'assigned': 'Assigned / Ku nyikiwile',
-            'in_progress': 'In Progress / Ku endliwa',
-            'resolved': 'Resolved / Ku lulamisiwile',
-            'closed': 'Closed / Ku pfariwile',
+            'pending': {'en': 'Pending', 'ts': 'Ku lindzela'},
+            'assigned': {'en': 'Assigned', 'ts': 'Ku nyikiwile'},
+            'in_progress': {'en': 'In Progress', 'ts': 'Ku endliwa'},
+            'resolved': {'en': 'Resolved', 'ts': 'Ku lulamisiwile'},
+            'closed': {'en': 'Closed', 'ts': 'Ku pfariwile'},
         }
-        return status_map.get(self.status, self.status)
+        return status_map.get(self.status, {}).get(language, self.status)
+    
+    def get_title(self, language='en'):
+        """Get title in specified language"""
+        if language == 'ts' and self.title_ts:
+            return self.title_ts
+        return self.title
+    
+    def get_description(self, language='en'):
+        """Get description in specified language"""
+        if language == 'ts' and self.description_ts:
+            return self.description_ts
+        return self.description
+    
+    def get_location(self, language='en'):
+        """Get location in specified language"""
+        if language == 'ts' and self.location_description_ts:
+            return self.location_description_ts
+        return self.location_description
 
 
 class CaseUpdate(models.Model):
-    """Track case updates and timeline"""
+    """Case updates with bilingual support"""
     
     case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='updates')
-    update_text = models.TextField()
-    update_text_xitsonga = models.TextField(blank=True, null=True)
+    update_text = models.TextField(verbose_name="Update in English")
+    update_text_ts = models.TextField(blank=True, null=True, verbose_name="Update in Xitsonga")
     update_type = models.CharField(max_length=20, choices=[
         ('status_change', 'Status Change'),
         ('officer_note', 'Officer Note'),
@@ -133,12 +156,16 @@ class CaseUpdate(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        verbose_name = _('Case Update')
-        verbose_name_plural = _('Case Updates')
         ordering = ['-created_at']
     
     def __str__(self):
         return f"{self.case.case_number} - {self.update_type} - {self.created_at}"
+    
+    def get_update_text(self, language='en'):
+        """Get update text in specified language"""
+        if language == 'ts' and self.update_text_ts:
+            return self.update_text_ts
+        return self.update_text
 
 
 class Evidence(models.Model):
@@ -147,13 +174,11 @@ class Evidence(models.Model):
     case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='evidence')
     image = models.ImageField(upload_to='evidence/%Y/%m/%d/')
     caption = models.CharField(max_length=500, blank=True)
-    caption_xitsonga = models.CharField(max_length=500, blank=True)
+    caption_ts = models.CharField(max_length=500, blank=True, verbose_name="Caption in Xitsonga")
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        verbose_name = _('Evidence')
-        verbose_name_plural = _('Evidence')
         ordering = ['-uploaded_at']
     
     def __str__(self):
@@ -161,35 +186,56 @@ class Evidence(models.Model):
 
 
 class PoliceStation(models.Model):
-    """Police station information"""
+    """Police station with bilingual support"""
     
-    name = models.CharField(max_length=200)
-    name_xitsonga = models.CharField(max_length=200, blank=True)
-    address = models.TextField()
+    name = models.CharField(max_length=200, verbose_name="Name in English")
+    name_ts = models.CharField(max_length=200, blank=True, verbose_name="Name in Xitsonga")
+    address = models.TextField(verbose_name="Address in English")
+    address_ts = models.TextField(blank=True, verbose_name="Address in Xitsonga")
     phone = models.CharField(max_length=20)
     emergency_phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
     location_lat = models.DecimalField(max_digits=10, decimal_places=7)
     location_lng = models.DecimalField(max_digits=10, decimal_places=7)
-    operating_hours = models.TextField()
+    operating_hours = models.TextField(verbose_name="Hours in English")
+    operating_hours_ts = models.TextField(blank=True, verbose_name="Hours in Xitsonga")
     is_satellite = models.BooleanField(default=False)
     
     class Meta:
-        verbose_name = _('Police Station')
-        verbose_name_plural = _('Police Stations')
+        verbose_name = 'Police Station'
+        verbose_name_plural = 'Police Stations'
     
     def __str__(self):
         return self.name
+    
+    def get_name(self, language='en'):
+        """Get name in specified language"""
+        if language == 'ts' and self.name_ts:
+            return self.name_ts
+        return self.name
+    
+    def get_address(self, language='en'):
+        """Get address in specified language"""
+        if language == 'ts' and self.address_ts:
+            return self.address_ts
+        return self.address
+    
+    def get_hours(self, language='en'):
+        """Get hours in specified language"""
+        if language == 'ts' and self.operating_hours_ts:
+            return self.operating_hours_ts
+        return self.operating_hours
 
 
 class Notification(models.Model):
-    """Notifications for users"""
+    """Notifications with bilingual support"""
     
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
     case = models.ForeignKey(Case, on_delete=models.CASCADE, null=True, blank=True, related_name='notifications')
-    title = models.CharField(max_length=200)
-    message = models.TextField()
-    message_xitsonga = models.TextField(blank=True)
+    title = models.CharField(max_length=200, verbose_name="Title in English")
+    title_ts = models.CharField(max_length=200, blank=True, verbose_name="Title in Xitsonga")
+    message = models.TextField(verbose_name="Message in English")
+    message_ts = models.TextField(blank=True, verbose_name="Message in Xitsonga")
     notification_type = models.CharField(max_length=20, choices=[
         ('status_update', 'Status Update'),
         ('reminder', 'Reminder'),
@@ -202,9 +248,19 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        verbose_name = _('Notification')
-        verbose_name_plural = _('Notifications')
         ordering = ['-created_at']
     
     def __str__(self):
         return f"{self.user} - {self.title}"
+    
+    def get_title(self, language='en'):
+        """Get title in specified language"""
+        if language == 'ts' and self.title_ts:
+            return self.title_ts
+        return self.title
+    
+    def get_message(self, language='en'):
+        """Get message in specified language"""
+        if language == 'ts' and self.message_ts:
+            return self.message_ts
+        return self.message

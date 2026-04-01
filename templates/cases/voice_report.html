@@ -7,53 +7,54 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-microphone"></i> {% trans "Voice Report" %}</h3>
+                    <h3><i class="fas fa-microphone"></i> {% trans "Voice Report" %} / Rhayela hi Rito</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle"></i> 
-                        {% trans "Speak clearly in English or Xitsonga. Describe what happened, when, and where." %}
+                        <strong>English:</strong> {% trans "Speak clearly in English or Xitsonga. Describe what happened, when, and where." %}<br>
+                        <strong>Xitsonga:</strong> Vulavula hi ndlela yo twisiseka hi Xinghezi kumbe Xitsonga. Hlamusela leswi endleke, nkarhi, ni ndhawu.
                     </div>
                     
                     <form method="post" id="voiceReportForm">
                         {% csrf_token %}
                         
                         <div class="mb-4">
-                            <label class="form-label">{% trans "Incident Category" %}</label>
+                            <label class="form-label fw-bold">{% trans "Incident Category" %} / Xiyenge xa Mhaka</label>
                             <select name="category" class="form-control" required>
-                                <option value="">{% trans "Select category..." %}</option>
+                                <option value="">{% trans "Select category..." %} / Hlawula xiyenge...</option>
                                 {% for category in categories %}
-                                <option value="{{ category.id }}">{{ category.get_name_display }}</option>
+                                <option value="{{ category.id }}">{{ category.get_name_in_language|default:category.get_name_display }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         
                         <div class="mb-4">
-                            <label class="form-label">{% trans "Voice Recording" %}</label>
-                            <div class="text-center p-4 border rounded">
+                            <label class="form-label fw-bold"><i class="fas fa-microphone"></i> {% trans "Voice Recording" %} / Ku Rekhoda Rito</label>
+                            <div class="text-center p-4 border rounded bg-light">
                                 <button type="button" id="startRecordingBtn" class="btn btn-danger btn-lg">
-                                    <i class="fas fa-microphone"></i> {% trans "Start Recording" %}
+                                    <i class="fas fa-microphone"></i> {% trans "Start Recording" %} / Sungula Ku Rekhoda
                                 </button>
                                 <button type="button" id="stopRecordingBtn" class="btn btn-secondary btn-lg" style="display:none;">
-                                    <i class="fas fa-stop"></i> {% trans "Stop Recording" %}
+                                    <i class="fas fa-stop"></i> {% trans "Stop Recording" %} / Yimisa Ku Rekhoda
                                 </button>
                                 <div id="recordingStatus" class="mt-2"></div>
                             </div>
                         </div>
                         
                         <div class="mb-4">
-                            <label class="form-label">{% trans "Transcribed Text" %}</label>
-                            <textarea name="transcribed_text" id="transcribedText" class="form-control" rows="5" placeholder="Your spoken words will appear here..."></textarea>
+                            <label class="form-label fw-bold">{% trans "Transcribed Text" %} / Matsalwa ya Rito</label>
+                            <textarea name="transcribed_text" id="transcribedText" class="form-control" rows="5" placeholder="Your spoken words will appear here... / Marito ya wena ya ta vonaka laha..."></textarea>
                         </div>
                         
                         <div class="mb-4">
-                            <label class="form-label">{% trans "Location" %}</label>
-                            <textarea name="location" class="form-control" rows="3" placeholder="e.g., Near Tzaneen Mall, Dan Village, Nkowankowa..." required></textarea>
+                            <label class="form-label fw-bold">{% trans "Location" %} / Ndhawu</label>
+                            <textarea name="location" class="form-control" rows="3" placeholder="e.g., Near Tzaneen Mall, Dan Village, Nkowankowa... / Xikombiso: Kusuhi na Tzaneen Mall, Dan Village, Nkowankowa..." required></textarea>
                         </div>
                         
                         <div class="mt-3">
                             <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="fas fa-paper-plane"></i> {% trans "Submit Voice Report" %}
+                                <i class="fas fa-paper-plane"></i> {% trans "Submit Voice Report" %} / Rhayela hi Rito
                             </button>
                         </div>
                     </form>
@@ -69,13 +70,12 @@
     let audioChunks = [];
     let isRecording = false;
     
-    // Check if browser supports speech recognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition;
     
     if (SpeechRecognition) {
         recognition = new SpeechRecognition();
-        recognition.lang = 'en-US'; // Will support multiple languages
+        recognition.lang = 'en-US';
         recognition.interimResults = true;
         recognition.maxAlternatives = 1;
         
@@ -83,19 +83,18 @@
             const transcript = Array.from(event.results)
                 .map(result => result[0].transcript)
                 .join('');
-            
             document.getElementById('transcribedText').value = transcript;
         };
         
         recognition.onerror = function(event) {
             console.error('Speech recognition error:', event.error);
             document.getElementById('recordingStatus').innerHTML = 
-                '<div class="alert alert-danger">Error: ' + event.error + '</div>';
+                '<div class="alert alert-danger">Error / Xihoxo: ' + event.error + '</div>';
         };
         
         recognition.onend = function() {
             document.getElementById('recordingStatus').innerHTML = 
-                '<div class="alert alert-info">Recording stopped</div>';
+                '<div class="alert alert-info">Recording stopped / Ku rekhoda yi yimisiwile</div>';
             document.getElementById('startRecordingBtn').style.display = 'inline-block';
             document.getElementById('stopRecordingBtn').style.display = 'none';
             isRecording = false;
@@ -105,7 +104,7 @@
             if (recognition) {
                 recognition.start();
                 document.getElementById('recordingStatus').innerHTML = 
-                    '<div class="alert alert-success">Recording... Speak now</div>';
+                    '<div class="alert alert-success">Recording... Speak now / Ku rekhoda... Vulavula sweswi</div>';
                 document.getElementById('startRecordingBtn').style.display = 'none';
                 document.getElementById('stopRecordingBtn').style.display = 'inline-block';
                 isRecording = true;
@@ -122,7 +121,7 @@
     } else {
         document.getElementById('startRecordingBtn').disabled = true;
         document.getElementById('recordingStatus').innerHTML = 
-            '<div class="alert alert-warning">Speech recognition not supported in your browser. Please type your report.</div>';
+            '<div class="alert alert-warning">Speech recognition not supported. Please type your report. / Ku lemuka rito a ku seketeliwi. Tsala mhaka ya wena.</div>';
     }
 </script>
 {% endblock %}
