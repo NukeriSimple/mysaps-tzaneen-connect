@@ -1,6 +1,5 @@
-{% load i18n %}
 <!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,75 +32,51 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cases:dashboard' %}">
-                            <i class="fas fa-tachometer-alt"></i> {% trans "Dashboard" %}
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cases:report_case' %}">
-                            <i class="fas fa-plus-circle"></i> {% trans "Report" %}
+                            <i class="fas fa-plus-circle"></i> Report
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cases:voice_report' %}">
-                            <i class="fas fa-microphone"></i> {% trans "Voice Report" %}
+                            <i class="fas fa-microphone"></i> Voice Report
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cases:station_finder' %}">
-                            <i class="fas fa-map-marker-alt"></i> {% trans "Stations" %}
+                            <i class="fas fa-map-marker-alt"></i> Stations
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cases:safety_tips' %}">
-                            <i class="fas fa-lightbulb"></i> {% trans "Safety Tips" %}
+                            <i class="fas fa-lightbulb"></i> Safety Tips
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cases:notifications' %}">
-                            <i class="fas fa-bell"></i> {% trans "Notifications" %}
+                            <i class="fas fa-bell"></i> Notifications
                         </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-language"></i> 
-                            {% if current_language == 'ts' %}Xitsonga{% else %}English{% endif %}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <form action="{% url 'set_language' %}" method="post" style="display: inline;">
-                                    {% csrf_token %}
-                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                                    <input name="language" type="hidden" value="en">
-                                    <button type="submit" class="dropdown-item">English</button>
-                                </form>
-                            </li>
-                            <li>
-                                <form action="{% url 'set_language' %}" method="post" style="display: inline;">
-                                    {% csrf_token %}
-                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                                    <input name="language" type="hidden" value="ts">
-                                    <button type="submit" class="dropdown-item">Xitsonga</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user"></i> {{ user.first_name|default:user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fas fa-id-card"></i> {% trans "Profile" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fas fa-id-card"></i> Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans "Logout" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
                 {% else %}
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">{% trans "Login" %}</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">{% trans "Register" %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Register</a></li>
                 </ul>
                 {% endif %}
             </div>
@@ -125,8 +100,8 @@
     
     <footer class="bg-light text-center py-3 mt-5">
         <div class="container">
-            <p class="mb-0">MySAPS Tzaneen Connect - {% trans "Serving the Tzaneen Community" %}</p>
-            <small>{% trans "Emergency" %}: 10111 | {% trans "Crime Stop" %}: 08600 10111 | {% trans "Ambulance" %}: 10177</small>
+            <p class="mb-0">MySAPS Tzaneen Connect - Serving the Tzaneen Community</p>
+            <small>Emergency: 10111 | Crime Stop: 08600 10111 | Ambulance: 10177</small>
         </div>
     </footer>
     

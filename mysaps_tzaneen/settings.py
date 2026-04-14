@@ -132,3 +132,22 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'cases:dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+# ========== EMAIL SETTINGS FOR PASSWORD RESET ==========
+# Add these lines at the bottom of your settings.py file
+
+# Email backend for development (prints emails to console instead of sending)
+# This is perfect for testing - you'll see the reset link in your terminal
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Password reset timeout (24 hours in seconds)
+PASSWORD_RESET_TIMEOUT = 86400
+
+# For production, replace the above EMAIL_BACKEND with these settings:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  # Or your email provider's SMTP server
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your-app-password'
+# DEFAULT_FROM_EMAIL = 'MySAPS Tzaneen <noreply@mysaps.co.za>'
