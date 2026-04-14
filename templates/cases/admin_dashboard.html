@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-shield-alt"></i> Police Admin Dashboard</h1>
+                <span class="badge bg-primary">Admin Access</span>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5>Total Cases</h5>
+                            <h2>{{ stats.total }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-warning text-dark">
+                        <div class="card-body">
+                            <h5>Pending</h5>
+                            <h2>{{ stats.pending }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5>In Progress</h5>
+                            <h2>{{ stats.in_progress }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5>Resolved</h5>
+                            <h2>{{ stats.resolved }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="get" class="row">
+                        <div class="col-md-4">
+                            <label>Filter by Status</label>
+                            <select name="status" class="form-control">
+                                <option value="all">All Statuses</option>
+                                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="assigned" {% if status_filter == 'assigned' %}selected{% endif %}>Assigned</option>
+                                <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
+                                <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Filter by Priority</label>
+                            <select name="priority" class="form-control">
+                                <option value="all">All Priorities</option>
+                                <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Low</option>
+                                <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Medium</option>
+                                <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>High</option>
+                                <option value="urgent" {% if priority_filter == 'urgent' %}selected{% endif %}>Urgent</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-primary form-control">Apply Filters</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Cases Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>All Reported Cases</h4>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Case Number</th>
+                                <th>User</th>
+                                <th>Title</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for case in cases %}
+                            <tr>
+                                <td><strong>{{ case.case_number }}</strong></td>
+                                <td>{{ case.user.get_full_name|default:case.user.username }}</td>
+                                <td>{{ case.title|truncatechars:40 }}</td>
+                                <td>
+                                    <span class="badge bg-{% if case.priority == 'urgent' %}danger{% elif case.priority == 'high' %}warning{% elif case.priority == 'medium' %}info{% else %}secondary{% endif %}">
+                                        {{ case.get_priority_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ case.get_status_color }}">
+                                        {{ case.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ case.created_at|date:"Y-m-d" }}</td>
+                                <td>
+                                    <a href="{% url 'cases:admin_case_detail' case.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i> Manage
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No cases found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    {% if cases.has_other_pages %}
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            {% if cases.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ cases.previous_page_number }}&status={{ status_filter }}&priority={{ priority_filter }}">Previous</a></li>
+                            {% endif %}
+                            {% for num in cases.paginator.page_range %}
+                            <li class="page-item {% if cases.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}&status={{ status_filter }}&priority={{ priority_filter }}">{{ num }}</a>
+                            </li>
+                            {% endfor %}
+                            {% if cases.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ cases.next_page_number }}&status={{ status_filter }}&priority={{ priority_filter }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

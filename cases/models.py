@@ -48,6 +48,13 @@ class Case(models.Model):
         ('closed', 'Closed / Ku pfariwile'),
     ]
     
+    PRIORITY_CHOICES = [
+        ('low', 'Low / Ku tlakuka'),
+        ('medium', 'Medium / Ku le xikarhi'),
+        ('high', 'High / Ku tlakuka'),
+        ('urgent', 'Urgent / Ku hatlisa'),
+    ]
+    
     # Case identification
     case_number = models.CharField(max_length=20, unique=True, editable=False)
     reference_number = models.CharField(max_length=20, blank=True, null=True)
@@ -75,10 +82,21 @@ class Case(models.Model):
     contact_phone = models.CharField(max_length=15)
     contact_email = models.EmailField(blank=True, null=True)
     
-    # Status
+    # Status and Priority
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    assigned_officer = models.CharField(max_length=100, blank=True, null=True)
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
+    
+    # Assignment
+    assigned_officer = models.CharField(max_length=200, blank=True, null=True)
+    assigned_officer_ts = models.CharField(max_length=200, blank=True, null=True, verbose_name="Assigned Officer in Xitsonga")
     assigned_station = models.CharField(max_length=100, blank=True, null=True)
+    
+    # Officer Notes
+    officer_notes = models.TextField(blank=True, null=True)
+    officer_notes_ts = models.TextField(blank=True, null=True, verbose_name="Officer Notes in Xitsonga")
+    
+    # Evidence flag
+    has_photo_evidence = models.BooleanField(default=False)
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -109,6 +127,15 @@ class Case(models.Model):
         }
         return colors.get(self.status, 'secondary')
     
+    def get_priority_color(self):
+        colors = {
+            'low': 'secondary',
+            'medium': 'info',
+            'high': 'warning',
+            'urgent': 'danger',
+        }
+        return colors.get(self.priority, 'secondary')
+    
     def get_status_display_bilingual(self, language='en'):
         """Get bilingual status display"""
         status_map = {
@@ -119,6 +146,16 @@ class Case(models.Model):
             'closed': {'en': 'Closed', 'ts': 'Ku pfariwile'},
         }
         return status_map.get(self.status, {}).get(language, self.status)
+    
+    def get_priority_display_bilingual(self, language='en'):
+        """Get bilingual priority display"""
+        priority_map = {
+            'low': {'en': 'Low', 'ts': 'Ku tlakuka'},
+            'medium': {'en': 'Medium', 'ts': 'Ku le xikarhi'},
+            'high': {'en': 'High', 'ts': 'Ku tlakuka'},
+            'urgent': {'en': 'Urgent', 'ts': 'Ku hatlisa'},
+        }
+        return priority_map.get(self.priority, {}).get(language, self.priority)
     
     def get_title(self, language='en'):
         """Get title in specified language"""
@@ -137,6 +174,18 @@ class Case(models.Model):
         if language == 'ts' and self.location_description_ts:
             return self.location_description_ts
         return self.location_description
+    
+    def get_assigned_officer(self, language='en'):
+        """Get assigned officer in specified language"""
+        if language == 'ts' and self.assigned_officer_ts:
+            return self.assigned_officer_ts
+        return self.assigned_officer or 'Not assigned'
+    
+    def get_officer_notes(self, language='en'):
+        """Get officer notes in specified language"""
+        if language == 'ts' and self.officer_notes_ts:
+            return self.officer_notes_ts
+        return self.officer_notes or 'No notes available'
 
 
 class CaseUpdate(models.Model):
@@ -166,6 +215,17 @@ class CaseUpdate(models.Model):
         if language == 'ts' and self.update_text_ts:
             return self.update_text_ts
         return self.update_text
+    
+    def get_update_type_display_bilingual(self, language='en'):
+        """Get bilingual update type display"""
+        type_map = {
+            'status_change': {'en': 'Status Change', 'ts': 'Ku hundzuka ka Xiyimo'},
+            'officer_note': {'en': 'Officer Note', 'ts': 'Nhlamuselo ya Ofisara'},
+            'user_followup': {'en': 'User Follow-up', 'ts': 'Ku landzelela ka Mupfuni'},
+            'evidence_added': {'en': 'Evidence Added', 'ts': 'Vumbhoni byi engeteriwile'},
+            'resolution': {'en': 'Resolution', 'ts': 'Ku lulamisiwa'},
+        }
+        return type_map.get(self.update_type, {}).get(language, self.update_type)
 
 
 class Evidence(models.Model):

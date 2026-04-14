@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'cases:admin_dashboard' %}">Admin Dashboard</a></li>
+                    <li class="breadcrumb-item active">Case Management</li>
+                </ol>
+            </nav>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3>Case: {{ case.case_number }}</h3>
+                        <span class="badge bg-{{ case.get_status_color }} p-2">
+                            {{ case.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>{{ case.title }}</h4>
+                            <p><strong>Description:</strong></p>
+                            <p>{{ case.description }}</p>
+                            
+                            <p><strong>Location:</strong></p>
+                            <p>{{ case.location_description }}</p>
+                            
+                            <p><strong>Reported by:</strong> {{ case.user.get_full_name|default:case.user.username }}</p>
+                            <p><strong>Phone:</strong> {{ case.contact_phone }}</p>
+                            <p><strong>Email:</strong> {{ case.contact_email|default:"Not provided" }}</p>
+                            <p><strong>Reported on:</strong> {{ case.created_at|date:"F j, Y, g:i a" }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5>Quick Stats</h5>
+                                    <p><strong>Priority:</strong> 
+                                        <span class="badge bg-{% if case.priority == 'urgent' %}danger{% elif case.priority == 'high' %}warning{% else %}secondary{% endif %}">
+                                            {{ case.get_priority_display }}
+                                        </span>
+                                    </p>
+                                    <p><strong>Assigned Officer:</strong> {{ case.assigned_officer|default:"Not assigned" }}</p>
+                                    <p><strong>Assigned Station:</strong> {{ case.assigned_station|default:"Not assigned" }}</p>
+                                    <p><strong>Last Updated:</strong> {{ case.updated_at|timesince }} ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status Update Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Update Case Status</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.as_p }}
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Officer Notes (Optional)</h5>
+                                {{ note_form.as_p }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Case
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Case Timeline -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>Case Timeline & Officer Notes</h4>
+                </div>
+                <div class="card-body">
+                    {% if updates %}
+                        {% for update in updates %}
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ update.get_update_type_display }}</strong>
+                                <small class="text-muted">{{ update.created_at|date:"F j, Y, g:i a" }} by {{ update.created_by.get_full_name|default:update.created_by.username }}</small>
+                            </div>
+                            <p class="mt-2">{{ update.update_text }}</p>
+                            {% if update.update_text_ts %}
+                            <p class="text-muted"><small>Xitsonga: {{ update.update_text_ts }}</small></p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No updates yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

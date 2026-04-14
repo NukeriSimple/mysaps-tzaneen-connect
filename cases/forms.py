@@ -57,3 +57,39 @@ class CaseReportForm(forms.ModelForm):
         for field in self.fields:
             if 'class' not in self.fields[field].widget.attrs:
                 self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+
+class CaseStatusUpdateForm(forms.ModelForm):
+    """Form for admin to update case status"""
+    
+    class Meta:
+        model = Case
+        fields = ('status', 'priority', 'assigned_officer', 'assigned_officer_ts', 'assigned_station')
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'priority': forms.Select(attrs={'class': 'form-control'}),
+            'assigned_officer': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Officer name'}),
+            'assigned_officer_ts': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Vito ra Ofisara (Xitsonga)'}),
+            'assigned_station': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Police station / Xitlhangi'}),
+        }
+        labels = {
+            'status': 'Case Status / Xiyimo xa Mhaka',
+            'priority': 'Priority / Xiyimo xa Nkarhi',
+            'assigned_officer': 'Assigned Officer / Ofisara loyi a nyikiweke',
+            'assigned_officer_ts': 'Assigned Officer (Xitsonga)',
+            'assigned_station': 'Assigned Station / Xitlhangi lexi nyikiweke',
+        }
+
+
+class OfficerNoteForm(forms.Form):
+    """Form for officers to add notes"""
+    officer_notes = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 4, 'class': 'form-control', 'placeholder': 'Add investigation notes, updates, or actions taken...'}),
+        required=False,
+        label='Officer Notes / Nhlamuselo ya Ofisara'
+    )
+    officer_notes_ts = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 4, 'class': 'form-control', 'placeholder': 'Nhlamuselo ya Ofisara hi Xitsonga...'}),
+        required=False,
+        label='Officer Notes (Xitsonga) / Nhlamuselo ya Ofisara hi Xitsonga'
+    )
